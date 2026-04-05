@@ -1,15 +1,15 @@
  #,                               Item,Ocado,Sainsbury's,Tesco,ASDA,Morrisons,Waitrose,Aldi,Lidl,Iceland,Co-op, M&S,Cheapest
  2,             Organic Apples ~6-pack, 2.35,       2.35, 2.35,2.34,     2.35,    3.00,    ,    ,       ,     ,    ,ASDA
- 4,             Organic Whole Milk 4pt, 2.40,       2.40, 2.40,2.24,     2.25,    2.45,    ,    ,       ,     ,    ,ASDA
- 9,              Organic Carrots ~500g, 1.35,           , 1.30,1.14,     1.05,    1.40,    ,    ,       ,     ,1.15,Morrisons
+ 4,             Organic Whole Milk 4pt, 2.40,       2.40, 2.45,2.40,     2.40,    2.50,    ,    ,       ,     ,    ,Ocado/Sainsbury's/ASDA/Morrisons
+ 9,              Organic Carrots ~500g, 0.90,       0.85, 1.25,1.14,     1.05,    1.40,    ,    ,       ,     ,1.15,Sainsbury's
  6,             Organic Beluga Lentils, 1.20,           ,     ,    ,         ,        ,    ,    ,       ,     ,    ,Ocado
-12,           Gluten-Free Salame Pizza, 3.50,       5.75, 3.80,3.50,     3.80,        ,    ,    ,       ,     ,    ,Ocado/ASDA
- 1,        Organic Green Lentils ~500g, 2.70,       2.50,     ,    ,         ,    2.75,    ,    ,       ,     ,2.70,Sainsbury's
- 5,          Organic Baked Beans ~420g, 1.10,       1.00, 1.40,    ,         ,    1.10,    ,    ,       ,     ,1.10,Sainsbury's
- 8,      Organic White Potatoes ~1.5kg, 2.15,       1.40, 1.75,1.77,         ,        ,    ,    ,       ,     ,    ,Sainsbury's
-14,       Organic Mature Cheddar ~270g, 3.25,       3.20, 5.20,    ,         ,        ,    ,    ,       ,     ,    ,Sainsbury's
- 3,              Organic Houmous ~200g, 4.00,       1.70, 1.65,    ,         ,    2.00,    ,    ,       ,     ,1.70,Tesco
- 7,          Organic Black Beans ~400g, 1.60,       1.30, 1.60,    ,         ,    1.25,    ,    ,       ,     ,    ,Waitrose
+12,           Gluten-Free Salame Pizza, 3.75,       5.75, 3.80,3.50,     3.80,        ,    ,    ,       ,     ,    ,ASDA
+ 1,        Organic Green Lentils ~500g, 2.70,       2.40,     ,    ,         ,    2.75,    ,    ,       ,     ,2.70,Sainsbury's
+ 5,          Organic Baked Beans ~420g, 1.10,       1.00, 1.05,    ,         ,    1.10,    ,    ,       ,     ,1.10,Sainsbury's
+ 8,      Organic White Potatoes ~1.5kg, 2.40,       1.80, 1.75,1.65,         ,        ,    ,    ,       ,     ,    ,ASDA
+14,       Organic Mature Cheddar ~270g, 5.00,       3.20, 5.20,    ,         ,        ,    ,    ,       ,     ,    ,Sainsbury's
+ 3,              Organic Houmous ~200g, 3.40,       1.65, 1.65,    ,         ,    2.00,    ,    ,       ,     ,1.70,Tesco/Sainsbury's
+ 7,          Organic Black Beans ~400g, 1.60,       1.05, 1.60,    ,         ,    1.25,    ,    ,       ,     ,    ,Sainsbury's
 10,     Organic Frozen Chopped Spinach, 2.85,           ,     ,    ,         ,    2.10,    ,    ,       ,     ,    ,Waitrose
-11,         Organic Frozen Blueberries, 4.80,           ,     ,    ,         ,    3.75,    ,    ,       ,     ,    ,Waitrose
-13,Organic Crunchy Peanut Butter ~340g, 3.60,       3.60, 3.60,3.58,         ,    2.65,    ,    ,       ,     ,    ,Waitrose
+11,         Organic Frozen Blueberries, 4.80,           ,     ,    ,         ,    3.90,    ,    ,       ,     ,    ,Waitrose
+13,Organic Crunchy Peanut Butter ~340g, 3.00,       3.60, 3.60,3.58,         ,    2.65,    ,    ,       ,     ,    ,Waitrose
