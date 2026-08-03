@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
+<title>Where's it cheapest?</title>
+<style>
+  :root {
+    --bg: #f7f4ed;
+    --surface: #fffdf8;
+    --surface-2: #f0ece2;
+    --line: #e0d9c9;
+    --ink: #23201a;
+    --ink-dim: #6f6959;
+    --win-bg: #e6f3e4;
+    --win-ink: #1f5f22;
+    --win-line: #b9ddb4;
+    --accent: #2e6b31;
+    --shadow: 0 1px 2px rgba(35,32,26,.05), 0 4px 14px rgba(35,32,26,.05);
+    --r: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --surface: #1c1f25;
+      --surface-2: #23272f;
+      --line: #313742;
+      --ink: #e9e6e0;
+      --ink-dim: #969ba6;
+      --win-bg: #1b3320;
+      --win-ink: #8fdd93;
+      --win-line: #2e5434;
+      --accent: #8fdd93;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 18px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-feature-settings: "tnum" 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 64px; }
+
+  header { margin-bottom: 20px; }
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    font-weight: 650;
+  }
+  .updated { margin: 6px 0 0; color: var(--ink-dim); font-size: .95rem; }
+
+  /* Search */
+  .search { position: relative; margin: 20px 0 14px; }
+  .search svg {
+    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px; stroke: var(--ink-dim); fill: none; stroke-width: 2;
+    pointer-events: none;
+  }
+  #q {
+    width: 100%;
+    min-height: 60px;
+    padding: 14px 52px 14px 52px;
+    font: inherit;
+    font-size: 1.15rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    outline: none;
+  }
+  #q::placeholder { color: var(--ink-dim); }
+  #q:focus { border-color: var(--accent); box-shadow: var(--shadow), 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+  #clear {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border: 0; border-radius: 50%;
+    background: transparent; color: var(--ink-dim);
+    font-size: 1.5rem; line-height: 1; cursor: pointer;
+    display: none;
+  }
+  #clear.on { display: block; }
+
+  /* Store filter chips */
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 22px;
+  }
+  .chip {
+    min-height: 46px;
+    padding: 10px 16px;
+    font: inherit; font-size: .98rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .chip .n { color: var(--ink-dim); margin-left: 6px; font-variant-numeric: tabular-nums; }
+  .chip[aria-pressed="true"] {
+    background: var(--win-bg);
+    border-color: var(--win-line);
+    color: var(--win-ink);
+    font-weight: 600;
+  }
+  .chip[aria-pressed="true"] .n { color: inherit; opacity: .7; }
+
+  /* Cards */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    padding: 18px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .item {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+
+  .winners { display: flex; flex-wrap: wrap; gap: 8px; }
+  .win {
+    display: flex; align-items: baseline; gap: 10px;
+    background: var(--win-bg);
+    border: 1px solid var(--win-line);
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: var(--win-ink);
+  }
+  .win .store { font-size: 1.05rem; font-weight: 650; }
+  .win .price { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.02em; }
+
+  .rest {
+    display: flex; flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: .98rem;
+  }
+  .rest div { display: flex; gap: 7px; }
+  .rest .price { font-variant-numeric: tabular-nums; }
+  .only { padding-top: 12px; border-top: 1px solid var(--line); margin: 0; color: var(--ink-dim); font-size: .95rem; font-style: italic; }
+
+  .empty { padding: 48px 8px; text-align: center; color: var(--ink-dim); font-size: 1.1rem; }
+  .error {
+    padding: 20px; border-radius: var(--r);
+    background: var(--surface); border: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .error code { font-size: .9rem; color: var(--ink-dim); word-break: break-word; }
+
+  footer { margin-top: 36px; color: var(--ink-dim); font-size: .88rem; line-height: 1.55; }
+
+  @media (max-width: 560px) {
+    .wrap { padding: 18px 14px 48px; }
+    h1 { font-size: 1.6rem; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Where's it cheapest?</h1>
+    <p class="updated">Prices updated <span id="updated">__UPDATED__</span></p>
+  </header>
+
+  <div class="search">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Search an item…" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+    <button id="clear" type="button" aria-label="Clear search">&times;</button>
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" hidden>Nothing matches that.</div>
+
+  <footer>
+    <p>Cheapest store per item, from <code>food_price_comparison.csv</code>. Prices are normalised to a comparable unit per item by the weekly update routine — compare within a row, not between rows. Blank supermarkets don't stock a certified organic equivalent.</p>
+  </footer>
+</div>
+
+<script>
+const STORES = ["Ocado","Sainsbury's","Tesco","ASDA","Morrisons","Waitrose","Aldi","Lidl","Iceland","Co-op","M&S"];
+
+const grid = document.getElementById('grid');
+const emptyEl = document.getElementById('empty');
+const chipsEl = document.getElementById('chips');
+const q = document.getElementById('q');
+const clearBtn = document.getElementById('clear');
+
+let items = [];
+let store = null;
+
+function parseLine(line) {
+  const out = [];
+  let cur = '', quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (quoted) {
+      if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+      else if (c === '"') quoted = false;
+      else cur += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ',') { out.push(cur.trim()); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur.trim());
+  return out;
+}
+
+function parseCsv(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+  const head = parseLine(lines[0]);
+  const cols = {};
+  head.forEach((h, i) => { cols[h] = i; });
+
+  return lines.slice(1).map(line => {
+    const f = parseLine(line);
+    const prices = [];
+    for (const s of STORES) {
+      const i = cols[s];
+      if (i === undefined) continue;
+      const v = parseFloat(f[i]);
+      if (Number.isFinite(v)) prices.push({ store: s, price: v });
+    }
+    prices.sort((a, b) => a.price - b.price);
+    const best = prices.length ? prices[0].price : null;
+    return {
+      name: f[cols['Item']],
+      prices,
+      winners: prices.filter(p => p.price === best),
+      others: prices.filter(p => p.price !== best)
+    };
+  }).filter(it => it.name && it.prices.length);
+}
+
+const money = n => '£' + n.toFixed(2);
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const shown = items.filter(it => {
+    if (store && !it.winners.some(w => w.store === store)) return false;
+    if (!term) return true;
+    return it.name.toLowerCase().includes(term)
+        || it.prices.some(p => p.store.toLowerCase().includes(term));
+  });
+
+  grid.replaceChildren(...shown.map(it => {
+    const card = document.createElement('article');
+    card.className = 'card';
+
+    const h = document.createElement('h2');
+    h.className = 'item';
+    h.textContent = it.name;
+    card.append(h);
+
+    const wins = document.createElement('div');
+    wins.className = 'winners';
+    for (const w of it.winners) {
+      const el = document.createElement('div');
+      el.className = 'win';
+      const s = document.createElement('span');
+      s.className = 'store';
+      s.textContent = w.store;
+      const p = document.createElement('span');
+      p.className = 'price';
+      p.textContent = money(w.price);
+      el.append(s, p);
+      wins.append(el);
+    }
+    card.append(wins);
+
+    if (it.others.length) {
+      const rest = document.createElement('div');
+      rest.className = 'rest';
+      for (const o of it.others) {
+        const row = document.createElement('div');
+        const s = document.createElement('span');
+        s.textContent = o.store;
+        const p = document.createElement('span');
+        p.className = 'price';
+        p.textContent = money(o.price);
+        row.append(s, p);
+        rest.append(row);
+      }
+      card.append(rest);
+    } else {
+      const only = document.createElement('p');
+      only.className = 'only';
+      only.textContent = 'Only stocked here.';
+      card.append(only);
+    }
+
+    return card;
+  }));
+
+  emptyEl.hidden = shown.length > 0;
+  clearBtn.classList.toggle('on', q.value !== '');
+}
+
+function buildChips() {
+  const wins = new Map();
+  for (const it of items) {
+    for (const w of it.winners) wins.set(w.store, (wins.get(w.store) || 0) + 1);
+  }
+  const ranked = [...wins.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+  const mk = (label, value, count) => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.type = 'button';
+    b.textContent = label;
+    if (count !== undefined) {
+      const n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = count;
+      b.append(n);
+    }
+    b.setAttribute('aria-pressed', String(store === value));
+    b.addEventListener('click', () => {
+      store = (store === value) ? null : value;
+      buildChips();
+      render();
+    });
+    return b;
+  };
+
+  chipsEl.replaceChildren(
+    mk('All items', null),
+    ...ranked.map(([s, c]) => mk(s, s, c))
+  );
+}
+
+q.addEventListener('input', render);
+clearBtn.addEventListener('click', () => { q.value = ''; q.focus(); render(); });
+
+fetch('food_price_comparison.csv', { cache: 'no-cache' })
+  .then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' fetching food_price_comparison.csv');
+    return r.text();
+  })
+  .then(text => {
+    items = parseCsv(text);
+    buildChips();
+    render();
+  })
+  .catch(err => {
+    const box = document.createElement('div');
+    box.className = 'error';
+    box.append(Object.assign(document.createElement('strong'), { textContent: "Couldn't load the price data." }));
+    box.append(document.createElement('br'));
+    box.append(Object.assign(document.createElement('code'), { textContent: String(err) }));
+    grid.replaceWith(box);
+  });
+</script>
+</body>
+</html>

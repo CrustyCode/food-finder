@@ -1,0 +1,19 @@
+Cells with no trolley price. Find these on the retailer sites,
+write them into food_price_comparison.csv normalised per kg (or per
+litre for drinks), and append any product page you used to
+sources.csv so it is free next week.
+
+Organic Apples ~6-pack: M&S, Morrisons, Tesco, Waitrose
+Organic Whole Milk 4pt: ASDA, M&S, Morrisons, Sainsbury's, Tesco
+Organic Carrots ~500g: ASDA, M&S, Morrisons, Sainsbury's
+Organic Beluga Lentils: ASDA, M&S, Morrisons, Sainsbury's, Tesco, Waitrose
+Gluten-Free Salame Pizza: ASDA, M&S, Morrisons, Sainsbury's, Tesco, Waitrose
+Organic Green Lentils ~500g: ASDA, M&S, Morrisons, Tesco
+Organic Baked Beans ~420g: ASDA, M&S, Morrisons
+Organic White Potatoes ~1.5kg: M&S, Morrisons, Waitrose
+Organic Mature Cheddar ~270g: ASDA, M&S, Morrisons, Tesco
+Organic Houmous ~200g: ASDA, M&S, Morrisons, Ocado, Waitrose
+Organic Black Beans ~400g: ASDA, M&S, Morrisons, Tesco
+Organic Frozen Chopped Spinach: ASDA, M&S, Morrisons, Tesco
+Organic Frozen Blueberries: ASDA, M&S, Morrisons, Waitrose
+Organic Crunchy Peanut Butter ~340g: M&S, Tesco

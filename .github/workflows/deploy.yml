@@ -1,0 +1,66 @@
+name: Deploy price dashboard
+
+# The weekly price routine pushes its CSV update to a claude/* branch, not to
+# master, so this triggers on both and always deploys whichever CSV just landed.
+on:
+  push:
+    branches:
+      - master
+      - 'claude/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # Always take the page itself from master, so a routine branch created
+      # before index.html existed still deploys a working site.
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Take the CSV from the branch that triggered this
+        if: github.ref != 'refs/heads/master'
+        run: git checkout ${{ github.sha }} -- food_price_comparison.csv
+
+      - name: Sync the CSV back to master
+        if: github.ref != 'refs/heads/master'
+        run: |
+          if git diff --quiet -- food_price_comparison.csv; then
+            echo "master already has this data"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: sync prices from ${GITHUB_REF#refs/heads/} [skip ci]" \
+            -- food_price_comparison.csv
+          git push origin HEAD:master
+
+      - name: Assemble site
+        run: |
+          mkdir _site
+          cp index.html food_price_comparison.csv _site/
+          stamp=$(git log -1 --format=%cd --date=format:'%-d %B %Y' -- food_price_comparison.csv)
+          sed -i "s/__UPDATED__/$stamp/" _site/index.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
