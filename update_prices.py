@@ -227,6 +227,7 @@ def main():
 
     items = []          # preserve sources.csv item order
     data = {}           # item -> {store: normalised price}
+    units = {}          # item -> "kg" or "l", whichever the row is priced in
     failures = []
 
     for row in rows:
@@ -268,6 +269,15 @@ def main():
             )
             continue
 
+        # Every price in a row must share a unit or the row is not comparable.
+        if units.get(item, unit) != unit:
+            failures.append(
+                f"{item}: '{name}' is priced per {unit} but the row is per "
+                f"{units[item]} -- skipped, the two cannot be compared"
+            )
+            continue
+        units[item] = unit
+
         for store, pack_price in prices.items():
             per_unit = round(pack_price / size, 2)
             if store not in data[item] or per_unit < data[item][store]:
@@ -276,7 +286,7 @@ def main():
         got = ", ".join(f"{s} {p}" for s, p in sorted(prices.items()))
         print(f"  {item:38} {name} ({size}{unit}) -> {got}")
 
-    write_csv(items, data)
+    write_csv(items, data, units)
     gaps = write_gaps(items, data)
 
     filled = sum(len(v) for v in data.values())
@@ -308,10 +318,10 @@ def write_gaps(items, data):
     return sum(len(l.split(":")[1].split(",")) for l in lines)
 
 
-def write_csv(items, data):
+def write_csv(items, data, units):
     with OUTPUT.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
-        w.writerow(["#", "Item"] + COLUMNS + ["Cheapest"])
+        w.writerow(["#", "Item", "Unit"] + COLUMNS + ["Cheapest"])
         for i, item in enumerate(items, 1):
             prices = data[item]
             cells = [f"{prices[c]:.2f}" if c in prices else "" for c in COLUMNS]
@@ -322,7 +332,7 @@ def write_csv(items, data):
                 )
             else:
                 cheapest = ""
-            w.writerow([i, item] + cells + [cheapest])
+            w.writerow([i, item, units.get(item, "")] + cells + [cheapest])
 
 
 if __name__ == "__main__":

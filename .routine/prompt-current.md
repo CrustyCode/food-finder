@@ -35,7 +35,11 @@ Do not add trolley.co.uk /search/ URLs — their robots.txt disallows that path.
 
 Before adding a row, sanity-check it is a like-for-like product. A premium or flavoured variant will make that supermarket look wrongly expensive; leave the cell for next time rather than adding a bad match.
 
-STEP 5 - Recalculate the Cheapest column for every row: the supermarket with the lowest non-empty price. If several tie, join them with a forward slash, e.g. Ocado/ASDA. The script already does this for the cells it filled, so redo it after your edits.
+STEP 5 - Check the Unit column and recalculate Cheapest.
+
+The Unit column says what every price in that row is measured in — `kg` for solids, `l` for milk and other drinks. The script fills it from what it scraped. Make sure the prices you added use that same unit; a row mixing £/kg and £/litre is meaningless. If a row's Unit is empty because the script scraped nothing for it, set it yourself to whichever unit you used.
+
+Then recalculate the Cheapest column for every row: the supermarket with the lowest non-empty price. If several tie, join them with a forward slash, e.g. Ocado/ASDA. The script already does this for the cells it filled, so redo it after your edits.
 
 STEP 6 - Sanity check before committing. Compare against the previous commit and investigate anything that moved more than about 30% either way — that usually means a product page changed to a different pack size, not a real price change. Report anything you could not resolve.
 

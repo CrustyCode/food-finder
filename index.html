@@ -150,6 +150,7 @@
   }
   .win .store { font-size: 1.05rem; font-weight: 650; }
   .win .price { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.02em; }
+  .win .unit { font-size: .95rem; font-weight: 600; opacity: .7; margin-left: -5px; }
 
   .rest {
     display: flex; flex-wrap: wrap;
@@ -200,7 +201,7 @@
   <div class="empty" id="empty" hidden>Nothing matches that.</div>
 
   <footer>
-    <p>Cheapest store per item, from <code>food_price_comparison.csv</code>. Prices are normalised to a comparable unit per item by the weekly update routine — compare within a row, not between rows. Blank supermarkets don't stock a certified organic equivalent.</p>
+    <p>Cheapest store per item, from <code>food_price_comparison.csv</code>. Every price in a card is normalised to the same unit, shown next to the winning price — so compare within a card, not between them. Supermarkets that don't stock a certified organic equivalent are left out.</p>
   </footer>
 </div>
 
@@ -252,6 +253,7 @@ function parseCsv(text) {
     const best = prices.length ? prices[0].price : null;
     return {
       name: f[cols['Item']],
+      unit: cols['Unit'] === undefined ? '' : f[cols['Unit']],
       prices,
       winners: prices.filter(p => p.price === best),
       others: prices.filter(p => p.price !== best)
@@ -291,6 +293,12 @@ function render() {
       p.className = 'price';
       p.textContent = money(w.price);
       el.append(s, p);
+      if (it.unit) {
+        const u = document.createElement('span');
+        u.className = 'unit';
+        u.textContent = '/' + it.unit;
+        el.append(u);
+      }
       wins.append(el);
     }
     card.append(wins);
