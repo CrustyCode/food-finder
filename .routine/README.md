@@ -4,8 +4,27 @@ Cloud routine `trig_01PBrJJTdi9KF8HokdB9BjRj` — "Weekly UK Supermarket Price
 Update", `0 2 * * 4` (Thursdays 03:00 BST). Manage it at
 <https://claude.ai/code/routines>.
 
-`prompt-current.md` is what the routine runs today. `prompt-2026-03.md` is the
-original browse-everything version, kept so the change can be reverted.
+`prompt-current.md` is a copy of what the routine runs. `prompt-2026-03.md` is
+the original browse-everything version, kept so the change can be reverted.
+
+## Editing these files changes nothing
+
+The prompt the routine actually executes is stored server-side on the trigger.
+Nothing syncs it to this directory, in either direction, so the two drift
+silently — the routine keeps firing successfully on whatever it was last given.
+On 2026-08-04 the stored prompt was still the March version, three months and
+one refactor out of date, having run weekly the whole time.
+
+After editing `prompt-current.md`, push it with the `RemoteTrigger` tool:
+
+    {action: "update", trigger_id: "trig_01PBrJJTdi9KF8HokdB9BjRj",
+     body: {job_config: {ccr: {...}}}}
+
+Send the whole `job_config` back with only
+`events[0].data.message.content` changed. A body carrying just the parts you
+edited risks dropping `session_context.outcomes`, which is the only thing
+pinning the push branch. Read the current config first with
+`{action: "get", trigger_id: "..."}` and edit that.
 
 ## Why it changed
 
