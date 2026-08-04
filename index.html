@@ -11,31 +11,75 @@
     --bg: #f7f4ed;
     --surface: #fffdf8;
     --surface-2: #f0ece2;
-    --line: #e0d9c9;
+    --line: #e3dccc;
+    --line-soft: #ede7da;
     --ink: #23201a;
-    --ink-dim: #6f6959;
-    --win-bg: #e6f3e4;
-    --win-ink: #1f5f22;
-    --win-line: #b9ddb4;
+    --ink-dim: #78715f;
+    --win-bg: #e8f3e5;
+    --win-ink: #1d5a20;
+    --win-line: #c2e0bd;
     --accent: #2e6b31;
-    --shadow: 0 1px 2px rgba(35,32,26,.05), 0 4px 14px rgba(35,32,26,.05);
-    --r: 16px;
+    --shadow: 0 1px 1px rgba(35,32,26,.04), 0 2px 8px rgba(35,32,26,.045);
+    --r: 12px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #14161a;
-      --surface: #1c1f25;
+      --surface: #1b1e23;
       --surface-2: #23272f;
-      --line: #313742;
+      --line: #2e343d;
+      --line-soft: #262b33;
       --ink: #e9e6e0;
-      --ink-dim: #969ba6;
-      --win-bg: #1b3320;
-      --win-ink: #8fdd93;
-      --win-line: #2e5434;
+      --ink-dim: #949aa4;
+      --win-bg: #1a3220;
+      --win-ink: #93e097;
+      --win-line: #2c5233;
       --accent: #8fdd93;
-      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+      --shadow: 0 1px 1px rgba(0,0,0,.25), 0 2px 8px rgba(0,0,0,.22);
     }
   }
+
+  /* Retailer brand colours, pulled towards the text contrast each theme needs
+     -- Morrisons yellow and Co-op cyan are unreadable at their true values. */
+  :root {
+    --s-ocado: #6d2c8f;
+    --s-sainsburys: #bd5a15;
+    --s-tesco: #00539f;
+    --s-asda: #5c8a0f;
+    --s-morrisons: #8a6100;
+    --s-waitrose: #3b7d2e;
+    --s-aldi: #14428e;
+    --s-lidl: #c00e2c;
+    --s-iceland: #8f2030;
+    --s-coop: #00799f;
+    --s-ms: #2b4a3d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --s-ocado: #c79be0;
+      --s-sainsburys: #f0a45f;
+      --s-tesco: #78b6ef;
+      --s-asda: #aad24d;
+      --s-morrisons: #e2b64f;
+      --s-waitrose: #8fcb6e;
+      --s-aldi: #8fb2ec;
+      --s-lidl: #f18b95;
+      --s-iceland: #e59aa2;
+      --s-coop: #5fc8e8;
+      --s-ms: #8cc4ae;
+    }
+  }
+  [data-store="ocado"]      { --b: var(--s-ocado); }
+  [data-store="sainsburys"] { --b: var(--s-sainsburys); }
+  [data-store="tesco"]      { --b: var(--s-tesco); }
+  [data-store="asda"]       { --b: var(--s-asda); }
+  [data-store="morrisons"]  { --b: var(--s-morrisons); }
+  [data-store="waitrose"]   { --b: var(--s-waitrose); }
+  [data-store="aldi"]       { --b: var(--s-aldi); }
+  [data-store="lidl"]       { --b: var(--s-lidl); }
+  [data-store="iceland"]    { --b: var(--s-iceland); }
+  [data-store="coop"]       { --b: var(--s-coop); }
+  [data-store="ms"]         { --b: var(--s-ms); }
 
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -43,141 +87,163 @@
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font: 18px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    font-feature-settings: "tnum" 1;
+    font: 16px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
+  .price, .chip .n { font-variant-numeric: tabular-nums; }
 
-  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 64px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 22px 18px 40px; }
 
-  header { margin-bottom: 20px; }
+  header {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px;
+    margin-bottom: 12px;
+  }
   h1 {
     margin: 0;
-    font-size: 2rem;
-    letter-spacing: -0.02em;
-    font-weight: 650;
+    font-size: 1.5rem;
+    letter-spacing: -0.021em;
+    font-weight: 640;
   }
-  .updated { margin: 6px 0 0; color: var(--ink-dim); font-size: .95rem; }
+  .updated { margin: 0; color: var(--ink-dim); font-size: .84rem; }
 
   /* Search */
-  .search { position: relative; margin: 20px 0 14px; }
+  .search { position: relative; margin-bottom: 8px; }
   .search svg {
-    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
-    width: 22px; height: 22px; stroke: var(--ink-dim); fill: none; stroke-width: 2;
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    width: 17px; height: 17px; stroke: var(--ink-dim); fill: none; stroke-width: 2;
     pointer-events: none;
   }
   #q {
     width: 100%;
-    min-height: 60px;
-    padding: 14px 52px 14px 52px;
+    height: 42px;
+    padding: 0 40px 0 38px;
     font: inherit;
-    font-size: 1.15rem;
     color: var(--ink);
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: var(--r);
+    border-radius: 10px;
     box-shadow: var(--shadow);
     outline: none;
   }
+  #q::-webkit-search-cancel-button { display: none; }
   #q::placeholder { color: var(--ink-dim); }
-  #q:focus { border-color: var(--accent); box-shadow: var(--shadow), 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+  #q:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
   #clear {
-    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    width: 44px; height: 44px; border: 0; border-radius: 50%;
+    position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    width: 34px; height: 34px; border: 0; border-radius: 50%;
     background: transparent; color: var(--ink-dim);
-    font-size: 1.5rem; line-height: 1; cursor: pointer;
+    font-size: 1.25rem; line-height: 1; cursor: pointer;
     display: none;
   }
   #clear.on { display: block; }
+  #clear:hover { color: var(--ink); }
 
   /* Store filter chips */
   .chips {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    margin-bottom: 22px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 14px;
   }
   .chip {
-    min-height: 46px;
-    padding: 10px 16px;
-    font: inherit; font-size: .98rem;
-    color: var(--ink);
-    background: var(--surface);
+    height: 30px;
+    padding: 0 11px;
+    font: inherit; font-size: .84rem;
+    color: var(--ink-dim);
+    background: transparent;
     border: 1px solid var(--line);
     border-radius: 999px;
     cursor: pointer;
     white-space: nowrap;
   }
-  .chip .n { color: var(--ink-dim); margin-left: 6px; font-variant-numeric: tabular-nums; }
+  .chip:hover { color: var(--ink); border-color: var(--ink-dim); }
+  .chip[data-store]::before {
+    content: ""; display: inline-block;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--b); margin-right: 7px; vertical-align: 1px;
+  }
+  .chip .n { margin-left: 5px; opacity: .65; }
   .chip[aria-pressed="true"] {
     background: var(--win-bg);
     border-color: var(--win-line);
     color: var(--win-ink);
     font-weight: 600;
   }
-  .chip[aria-pressed="true"] .n { color: inherit; opacity: .7; }
 
   /* Cards */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+    gap: 10px;
   }
   .card {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--r);
     box-shadow: var(--shadow);
-    padding: 18px 18px 14px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 8px;
   }
   .item {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: .95rem;
     font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.25;
+    letter-spacing: -0.008em;
+    line-height: 1.3;
   }
 
-  .winners { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* One winner per row, full width. Fitting ties side by side left the longer
+     store names wrapping inside their box at some card widths. */
+  .winners { display: grid; gap: 6px; }
   .win {
-    display: flex; align-items: baseline; gap: 10px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
     background: var(--win-bg);
     border: 1px solid var(--win-line);
-    border-radius: 12px;
-    padding: 10px 14px;
+    border-radius: 9px;
+    padding: 8px 10px;
     color: var(--win-ink);
   }
-  .win .store { font-size: 1.05rem; font-weight: 650; }
-  .win .price { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.02em; }
-  .win .unit { font-size: .95rem; font-weight: 600; opacity: .7; margin-left: -5px; }
+  .win .store {
+    color: var(--b, inherit);
+    font-size: .84rem; font-weight: 600; line-height: 1.15;
+  }
+  .win .price { font-size: 1.2rem; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+  .win .unit { font-size: .72rem; font-weight: 500; opacity: .65; }
+  .win .store, .win .price { white-space: nowrap; }
 
   .rest {
-    display: flex; flex-wrap: wrap;
-    gap: 4px 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 2px 14px;
     margin: 0;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
+    padding-top: 8px;
+    border-top: 1px solid var(--line-soft);
     color: var(--ink-dim);
-    font-size: .98rem;
+    font-size: .82rem;
   }
-  .rest div { display: flex; gap: 7px; }
-  .rest .price { font-variant-numeric: tabular-nums; }
-  .only { padding-top: 12px; border-top: 1px solid var(--line); margin: 0; color: var(--ink-dim); font-size: .95rem; font-style: italic; }
+  .rest div { display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; }
+  .rest .store { color: color-mix(in srgb, var(--b, currentColor) 72%, var(--ink-dim)); }
+  .only {
+    margin: 0; padding-top: 8px;
+    border-top: 1px solid var(--line-soft);
+    color: var(--ink-dim); font-size: .82rem;
+  }
 
-  .empty { padding: 48px 8px; text-align: center; color: var(--ink-dim); font-size: 1.1rem; }
+  .empty { padding: 40px 8px; text-align: center; color: var(--ink-dim); }
   .error {
-    padding: 20px; border-radius: var(--r);
+    padding: 14px; border-radius: var(--r);
     background: var(--surface); border: 1px solid var(--line);
-    color: var(--ink);
+    color: var(--ink); font-size: .9rem;
   }
-  .error code { font-size: .9rem; color: var(--ink-dim); word-break: break-word; }
+  .error code { font-size: .82rem; color: var(--ink-dim); word-break: break-word; }
 
-  footer { margin-top: 36px; color: var(--ink-dim); font-size: .88rem; line-height: 1.55; }
-
+  @media (hover: hover) {
+    .card { transition: border-color .15s ease; }
+    .card:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+  }
   @media (max-width: 560px) {
-    .wrap { padding: 18px 14px 48px; }
-    h1 { font-size: 1.6rem; }
+    .wrap { padding: 16px 12px 32px; }
+    h1 { font-size: 1.3rem; }
     .grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -199,10 +265,6 @@
 
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" hidden>Nothing matches that.</div>
-
-  <footer>
-    <p>Cheapest store per item, from <code>food_price_comparison.csv</code>. Every price in a card is normalised to the same unit, shown next to the winning price — so compare within a card, not between them. Supermarkets that don't stock a certified organic equivalent are left out.</p>
-  </footer>
 </div>
 
 <script>
@@ -262,6 +324,8 @@ function parseCsv(text) {
 }
 
 const money = n => '£' + n.toFixed(2);
+// Matches the [data-store="..."] brand-colour rules in the stylesheet.
+const slug = s => s.toLowerCase().replace(/[^a-z]/g, '');
 
 function render() {
   const term = q.value.trim().toLowerCase();
@@ -288,17 +352,18 @@ function render() {
       el.className = 'win';
       const s = document.createElement('span');
       s.className = 'store';
+      s.dataset.store = slug(w.store);
       s.textContent = w.store;
       const p = document.createElement('span');
       p.className = 'price';
       p.textContent = money(w.price);
-      el.append(s, p);
       if (it.unit) {
         const u = document.createElement('span');
         u.className = 'unit';
         u.textContent = '/' + it.unit;
-        el.append(u);
+        p.append(' ', u);
       }
+      el.append(s, p);
       wins.append(el);
     }
     card.append(wins);
@@ -309,6 +374,8 @@ function render() {
       for (const o of it.others) {
         const row = document.createElement('div');
         const s = document.createElement('span');
+        s.className = 'store';
+        s.dataset.store = slug(o.store);
         s.textContent = o.store;
         const p = document.createElement('span');
         p.className = 'price';
@@ -342,6 +409,7 @@ function buildChips() {
     const b = document.createElement('button');
     b.className = 'chip';
     b.type = 'button';
+    if (value) b.dataset.store = slug(value);
     b.textContent = label;
     if (count !== undefined) {
       const n = document.createElement('span');
