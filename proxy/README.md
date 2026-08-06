@@ -25,8 +25,16 @@ local address, a LAN host, or anything else on the internet.
 
     sudo systemctl daemon-reload
     sudo systemctl enable --now ocado-proxy
+
+Check it, reading the token back out of the file rather than retyping it:
+
+    TOKEN=$(sudo sed -n 's/^OCADO_PROXY_TOKEN=//p' /etc/ocado-proxy/env)
     curl -sD- -o/dev/null http://127.0.0.1:8787/ocado/ocado-organic-carrots/627742011 \
         -H "Authorization: Bearer $TOKEN"
+
+`HTTP/1.0 200 OK` means it works. `401` means the token did not match, `502`
+means Ocado refused this machine too — check `journalctl -u ocado-proxy` for
+the upstream status.
 
 ## Put TLS in front of it
 
