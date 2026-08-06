@@ -39,9 +39,13 @@ context, writes `gaps.txt`, and the agent only chases what is left.
 
 ## What the routine must know
 
-- It pushes to a `claude/*` branch, **not** master, regardless of what the
-  prompt says — `job_config.ccr.session_context.outcomes` pins the branch.
-  `.github/workflows/deploy.yml` handles that and syncs the CSV back to master.
+- It pushes to master. The branch is pinned by
+  `job_config.ccr.session_context.outcomes`, not by anything the prompt says,
+  so change it there. Until 2026-08-06 it pointed at `claude/gifted-sagan`,
+  which meant every run landed on a fresh `claude/*` branch that the
+  `github-pages` environment then refused to deploy from — protection rules
+  allow the default branch only. `deploy.yml` carried a sync-back step to
+  work around it; both the branch and the workaround are now gone.
 - `update_prices.py` fetches from Bash, so it needs the sandbox to allow egress
   to `www.trolley.co.uk` and `www.ocado.com`. That allowlist comes from two
   different places, which is what made the failure confusing:
