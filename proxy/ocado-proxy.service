@@ -1,0 +1,46 @@
+# Install to /etc/systemd/system/ocado-proxy.service, then:
+#
+#   install -d -m 700 /etc/ocado-proxy
+#   printf 'OCADO_PROXY_TOKEN=%s\n' "$(openssl rand -hex 32)" \
+#       > /etc/ocado-proxy/env
+#   chmod 600 /etc/ocado-proxy/env
+#   systemctl enable --now ocado-proxy
+#
+# It listens on 127.0.0.1 only. Terminate TLS in front of it -- the token is a
+# bearer credential and must not cross the internet in clear.
+
+[Unit]
+Description=Ocado product page relay for the food-finder price routine
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/food-finder/proxy/ocado_proxy.py
+EnvironmentFile=/etc/ocado-proxy/env
+Restart=on-failure
+RestartSec=5
+
+# The service reads one file and talks to one host; give it nothing else.
+DynamicUser=yes
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+ProtectProc=invisible
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+CapabilityBoundingSet=
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

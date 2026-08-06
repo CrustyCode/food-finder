@@ -57,6 +57,13 @@ context, writes `gaps.txt`, and the agent only chases what is left.
 
   WebFetch and WebSearch are in-process and bypass the sandbox entirely, which
   is why hand-filling gaps kept working throughout.
+- **Ocado 403s every datacenter IP**, the routine's sandbox and WebFetch alike,
+  and no trolley page carries an Ocado price (checked: 0 of 51). Its 13 sources
+  therefore go through `proxy/ocado_proxy.py`, running on a machine Ocado does
+  answer. Set `PRICE_PROXY` and `PRICE_PROXY_TOKEN` in the routine's
+  environment and allow the proxy's host there; unset, on a home machine,
+  `update_prices.py` fetches Ocado directly as before. If the Ocado column
+  comes back empty, check the proxy before suspecting the parser.
 - Tesco, Sainsbury's and ASDA return 403 to scripted requests; M&S renders
   prices client-side. Those cells can only be filled with WebFetch/WebSearch.
 - Ocado and trolley.co.uk scrape cleanly and are already wired into

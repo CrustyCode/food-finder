@@ -26,6 +26,7 @@ Stdlib only, no dependencies.
 import csv
 import html
 import json
+import os
 import re
 import sys
 import time
@@ -91,9 +92,21 @@ HEADERS = {
 }
 DELAY = 1.0
 
+# Ocado answers a residential connection and 403s datacenter ones, so the
+# routine cannot read it at all. Point these at proxy/ocado_proxy.py running
+# somewhere Ocado does answer and its product pages are relayed through it.
+# Unset -- on a home machine -- Ocado is fetched directly, as it always was.
+OCADO_PREFIX = "https://www.ocado.com/products/"
+PROXY = os.environ.get("PRICE_PROXY", "").rstrip("/")
+PROXY_TOKEN = os.environ.get("PRICE_PROXY_TOKEN", "")
+
 
 def fetch(url):
-    req = urllib.request.Request(url, headers=HEADERS)
+    headers = dict(HEADERS)
+    if PROXY and url.startswith(OCADO_PREFIX):
+        headers["Authorization"] = f"Bearer {PROXY_TOKEN}"
+        url = f"{PROXY}/ocado/{url[len(OCADO_PREFIX):]}"
+    req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=30) as r:
         return r.read().decode("utf-8", "replace")
 
@@ -223,6 +236,12 @@ def scrape_trolley(url):
 
 
 def main():
+    if PROXY and not PROXY_TOKEN:
+        sys.exit("PRICE_PROXY is set but PRICE_PROXY_TOKEN is not")
+    if PROXY and not PROXY.startswith(("https://", "http://127.0.0.1",
+                                       "http://localhost")):
+        sys.exit("PRICE_PROXY must be https -- the token would travel in clear")
+
     rows = list(csv.DictReader(SOURCES.open(encoding="utf-8")))
 
     items = []          # preserve sources.csv item order
