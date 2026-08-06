@@ -42,13 +42,21 @@ context, writes `gaps.txt`, and the agent only chases what is left.
 - It pushes to a `claude/*` branch, **not** master, regardless of what the
   prompt says — `job_config.ccr.session_context.outcomes` pins the branch.
   `.github/workflows/deploy.yml` handles that and syncs the CSV back to master.
-- `update_prices.py` fetches over the network from Bash, so it depends on the
-  sandbox egress allowlist, which Claude Code derives from the
-  `WebFetch(domain:…)` permissions. Those lived only in
-  `.claude/settings.local.json`, which `.gitignore` excluded, so the routine's
-  checkout got none of them and every fetch timed out. `.claude/settings.json`
-  is now tracked and carries the list; keep any new source host in it.
-  WebFetch/WebSearch are unaffected — they do not go through the sandbox.
+- `update_prices.py` fetches from Bash, so it needs the sandbox to allow egress
+  to `www.trolley.co.uk` and `www.ocado.com`. That allowlist comes from two
+  different places, which is what made the failure confusing:
+  - **On a developer's machine**, from the `WebFetch(domain:…)` permission
+    rules — Claude Code derives the sandbox allowlist from them. These now live
+    in the tracked `.claude/settings.json`; `.gitignore` used to exclude the
+    whole of `.claude/`, so a fresh clone had no egress at all.
+  - **In the cloud routine**, from the environment's own network access
+    settings (`env_011CUqCa5jqSbAostLeufsv1`, edit at
+    <https://claude.ai/code>). Repository settings do not reach it. Any new
+    scrape host must be added there as well, or the routine silently reaches
+    nothing while it works fine locally.
+
+  WebFetch and WebSearch are in-process and bypass the sandbox entirely, which
+  is why hand-filling gaps kept working throughout.
 - Tesco, Sainsbury's and ASDA return 403 to scripted requests; M&S renders
   prices client-side. Those cells can only be filled with WebFetch/WebSearch.
 - Ocado and trolley.co.uk scrape cleanly and are already wired into
