@@ -229,6 +229,7 @@ def main():
     data = {}           # item -> {store: normalised price}
     units = {}          # item -> "kg" or "l", whichever the row is priced in
     failures = []
+    dead = 0            # consecutive fetch failures, i.e. probably no egress
 
     for row in rows:
         item = row["item"].strip()
@@ -246,8 +247,21 @@ def main():
 
         try:
             name, size, unit, prices = scrape(url, store)
+            dead = 0
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as e:
             failures.append(f"{item}: FETCH FAILED {url} ({e})")
+            dead += 1
+            # Nothing has been reachable for five sources running. Sandboxed
+            # runs see this as a timeout per source, so carrying on would stall
+            # for half an hour and then rewrite the CSV empty.
+            if dead == 5:
+                print(
+                    f"\nAborting: {dead} fetches in a row failed. The sandbox "
+                    f"egress allowlist must cover www.trolley.co.uk and "
+                    f"www.ocado.com -- see .claude/settings.json.",
+                    file=sys.stderr,
+                )
+                return 1
             continue
         finally:
             time.sleep(DELAY)
@@ -285,6 +299,13 @@ def main():
 
         got = ", ".join(f"{s} {p}" for s, p in sorted(prices.items()))
         print(f"  {item:38} {name} ({size}{unit}) -> {got}")
+
+    # A run that reached nothing must not overwrite last week's figures with a
+    # grid of blanks; that is an environment failure, not a price of zero.
+    if not any(data.values()):
+        print("\nNo prices scraped at all -- leaving existing files untouched.",
+              file=sys.stderr)
+        return 1
 
     write_csv(items, data, units)
     gaps = write_gaps(items, data)

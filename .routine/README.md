@@ -42,6 +42,13 @@ context, writes `gaps.txt`, and the agent only chases what is left.
 - It pushes to a `claude/*` branch, **not** master, regardless of what the
   prompt says — `job_config.ccr.session_context.outcomes` pins the branch.
   `.github/workflows/deploy.yml` handles that and syncs the CSV back to master.
+- `update_prices.py` fetches over the network from Bash, so it depends on the
+  sandbox egress allowlist, which Claude Code derives from the
+  `WebFetch(domain:…)` permissions. Those lived only in
+  `.claude/settings.local.json`, which `.gitignore` excluded, so the routine's
+  checkout got none of them and every fetch timed out. `.claude/settings.json`
+  is now tracked and carries the list; keep any new source host in it.
+  WebFetch/WebSearch are unaffected — they do not go through the sandbox.
 - Tesco, Sainsbury's and ASDA return 403 to scripted requests; M&S renders
   prices client-side. Those cells can only be filled with WebFetch/WebSearch.
 - Ocado and trolley.co.uk scrape cleanly and are already wired into

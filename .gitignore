@@ -1,5 +1,7 @@
-# Claude Code
-.claude/
+# Claude Code -- settings.json is tracked, it carries the routine's egress
+# allowlist; settings.local.json and the rest stay local.
+.claude/*
+!.claude/settings.json
 
 # Environment & secrets
 .env

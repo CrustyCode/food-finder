@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.trolley.co.uk)",
+      "WebFetch(domain:www.ocado.com)",
+      "WebFetch(domain:www.tesco.com)",
+      "WebFetch(domain:www.sainsburys.co.uk)",
+      "WebFetch(domain:groceries.asda.com)",
+      "WebFetch(domain:www.asda.com)",
+      "WebFetch(domain:groceries.morrisons.com)",
+      "WebFetch(domain:www.morrisons.com)",
+      "WebFetch(domain:www.waitrose.com)",
+      "WebFetch(domain:www.marksandspencer.com)",
+      "WebFetch(domain:groceries.aldi.co.uk)"
+    ]
+  }
+}
