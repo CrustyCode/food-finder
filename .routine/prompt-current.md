@@ -47,4 +47,10 @@ STEP 7 - Commit all changed files, including sources.csv, with the message:
 
     chore: weekly price update YYYY-MM-DD
 
-using today's date, and push.
+using today's date. Then push it to master explicitly:
+
+    git push origin HEAD:master
+
+That explicit push is the only thing that lands the update. The runner makes its own push to a derived branch named `master-<random>`, which nothing deploys from — `session_context.outcomes` sets the base branch to check out, not the push target, so this cannot be fixed by configuration. Only the repository's default branch can deploy to GitHub Pages.
+
+If the push is rejected as non-fast-forward, master moved while you were working. Report that and stop. Never use --force.

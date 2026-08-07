@@ -22,9 +22,9 @@ After editing `prompt-current.md`, push it with the `RemoteTrigger` tool:
 
 Send the whole `job_config` back with only
 `events[0].data.message.content` changed. A body carrying just the parts you
-edited risks dropping `session_context.outcomes`, which is the only thing
-pinning the push branch. Read the current config first with
-`{action: "get", trigger_id: "..."}` and edit that.
+edited risks dropping `session_context.outcomes`, which sets the base branch.
+Read the current config first with `{action: "get", trigger_id: "..."}` and
+edit that.
 
 ## Why it changed
 
@@ -39,13 +39,26 @@ context, writes `gaps.txt`, and the agent only chases what is left.
 
 ## What the routine must know
 
-- It pushes to master. The branch is pinned by
-  `job_config.ccr.session_context.outcomes`, not by anything the prompt says,
-  so change it there. Until 2026-08-06 it pointed at `claude/gifted-sagan`,
-  which meant every run landed on a fresh `claude/*` branch that the
-  `github-pages` environment then refused to deploy from — protection rules
-  allow the default branch only. `deploy.yml` carried a sync-back step to
-  work around it; both the branch and the workaround are now gone.
+- **The runner never pushes to an existing branch.** It always creates a fresh
+  `<base>-<random>` branch and pushes there.
+  `job_config.ccr.session_context.outcomes` sets the *base* to derive from, not
+  the push target — no value of it will make the runner push to master. The
+  naming shows it: base `claude/gifted-sagan` produced
+  `claude/gifted-sagan-7jrong`, `-izzdhv`, `-lhrcvh` and six more; changing the
+  base to `master` on 2026-08-06 just produced `master-763501` on the next run.
+  Master is not branch-protected, so this is runner behaviour, not a
+  permissions fallback.
+
+  What actually lands the update is the explicit `git push origin HEAD:master`
+  in STEP 7 of the prompt (added 2026-08-07). The derived branch still gets
+  created every run and is inert — prune them when they pile up. If STEP 7 is
+  ever edited, keep that push, or the dashboard silently freezes again while
+  the routine keeps reporting success.
+
+  Until 2026-08-06 the base was `claude/gifted-sagan`, and the orphan branches
+  were also undeployable: the `github-pages` environment allows the default
+  branch only. `deploy.yml` carried a sync-back step to work around that; the
+  workaround is gone.
 - `update_prices.py` fetches from Bash, so it needs the sandbox to allow egress
   to `www.trolley.co.uk` and `www.ocado.com`. That allowlist comes from two
   different places, which is what made the failure confusing:
