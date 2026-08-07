@@ -1,15 +1,12 @@
 #,Item,Unit,Ocado,Sainsbury's,Tesco,ASDA,Morrisons,Waitrose,Aldi,Lidl,Iceland,Co-op,M&S,Cheapest
-2,Organic Apples ~6-pack,kg,3.13,3.13,3.73,3.12,3.13,4.00,,,,,,ASDA
-4,Organic Whole Milk 4pt,l,1.06,1.06,1.06,1.06,0.99,1.10,,,,,,Morrisons
-9,Organic Carrots ~500g,kg,1.80,1.93,1.86,1.63,1.75,2.80,,,,,2.00,ASDA
-6,Organic Beluga Lentils,kg,4.00,,,,,,,,,,,Ocado
-12,Gluten-Free Salame Pizza,kg,11.90,10.61,12.06,11.11,12.06,12.06,,,,,,Sainsbury's
-1,Organic Green Lentils ~500g,kg,5.40,5.00,,,,5.50,,,,,4.50,M&S
-5,Organic Baked Beans ~420g,kg,2.62,2.38,2.38,,,2.62,,,,,2.62,Sainsbury's/Tesco
-8,Organic White Potatoes ~1.5kg,kg,1.43,0.93,1.20,1.18,1.10,,,,,,,Sainsbury's
-14,Organic Mature Cheddar ~270g,kg,18.52,11.85,19.26,,,,,,,,,Sainsbury's
-3,Organic Houmous ~200g,kg,17.00,8.50,8.25,,,10.00,,,,,8.50,Tesco
-7,Organic Black Beans ~400g,kg,4.00,3.29,3.13,,,3.13,,,,,,Tesco/Waitrose
-10,Organic Frozen Chopped Spinach,kg,6.33,,,,,4.20,,,,,,Waitrose
-11,Organic Frozen Blueberries,kg,12.00,,,,,12.50,,,,,,Ocado
-13,Organic Crunchy Peanut Butter ~340g,kg,10.59,10.59,10.59,10.53,,7.35,,,,,,Waitrose
+1,Organic Apples ~6-pack,kg,3.13,3.13,3.73,3.12,,,,,,,,ASDA
+2,Organic Whole Milk 4pt,l,1.17,1.17,1.08,1.06,0.99,1.17,,,,,,Morrisons
+3,Organic Carrots ~500g,kg,1.93,1.93,1.93,1.81,1.75,2.07,,,,2.80,,Morrisons
+4,Organic Green Lentils ~500g,kg,5.40,5.00,,,,5.50,,,,,,Sainsbury's
+5,Organic White Potatoes ~1.5kg,kg,1.43,1.23,1.23,1.21,,1.43,,,,,,ASDA
+6,Organic Mature Cheddar ~270g,kg,13.00,12.96,13.25,,,13.57,,,,,,Sainsbury's
+7,Organic Houmous ~200g,kg,,8.50,8.50,,,10.00,,,,,,Sainsbury's/Tesco
+8,Organic Black Beans ~400g,kg,4.00,3.42,4.38,,,3.00,,,,,,Waitrose
+9,Organic Frozen Chopped Spinach,kg,6.56,6.33,,,,4.20,,,,,,Waitrose
+10,Organic Frozen Blueberries,kg,16.00,16.00,16.00,,,,,,,,,Ocado/Sainsbury's/Tesco
+11,Organic Crunchy Peanut Butter ~340g,kg,10.29,13.24,,10.24,10.59,8.09,,,,,,Waitrose
