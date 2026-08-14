@@ -175,6 +175,8 @@
     gap: 10px;
   }
   .card {
+    position: relative;
+    overflow: hidden;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--r);
@@ -183,6 +185,34 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  /* The item's glyph a second time, oversized and blurred into the corner.
+     Something to recognise a card by at a glance -- deliberately too faint to
+     read, so it never competes with the prices sitting on top of it. */
+  .card::before {
+    content: var(--ico, "");
+    position: absolute; z-index: 0;
+    top: -20px; right: -12px;
+    font-size: 92px; line-height: 1;
+    opacity: .07;
+    filter: blur(2px);
+    pointer-events: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    .card::before { opacity: .08; }
+  }
+
+  .head { display: flex; align-items: center; gap: 10px; }
+  .ico {
+    flex: none;
+    width: 34px; height: 34px;
+    display: grid; place-items: center;
+    font-size: 1.15rem; line-height: 1;
+    background: var(--surface-2);
+    border: 1px solid var(--line-soft);
+    border-radius: 9px;
   }
   .item {
     margin: 0;
@@ -323,6 +353,29 @@ function parseCsv(text) {
   }).filter(it => it.name && it.prices.length);
 }
 
+// One glyph per item, matched on the name so a new row in the CSV gets its own
+// without touching this file. First match wins, so the narrower word goes
+// first -- skyr before yoghurt, lentils before beans.
+const ICONS = [
+  [/skyr/,            '🫙'],
+  [/yogh?urt/,        '🥣'],
+  [/milk/,            '🥛'],
+  [/apple/,           '🍎'],
+  [/carrot/,          '🥕'],
+  [/potato/,          '🥔'],
+  [/cheddar|cheese/,  '🧀'],
+  [/lentil/,          '🫘'],
+  [/bean/,            '🥫'],
+  [/houmous|hummus/,  '🧆'],
+  [/spinach/,         '🥬'],
+  [/blueberr/,        '🫐'],
+  [/peanut/,          '🥜'],
+];
+const iconFor = name => {
+  const hit = ICONS.find(([re]) => re.test(name.toLowerCase()));
+  return hit ? hit[1] : '🛒';
+};
+
 const money = n => '£' + n.toFixed(2);
 // Matches the [data-store="..."] brand-colour rules in the stylesheet.
 const slug = s => s.toLowerCase().replace(/[^a-z]/g, '');
@@ -340,10 +393,20 @@ function render() {
     const card = document.createElement('article');
     card.className = 'card';
 
+    const ico = iconFor(it.name);
+    card.style.setProperty('--ico', JSON.stringify(ico));
+
+    const head = document.createElement('div');
+    head.className = 'head';
+    const badge = document.createElement('span');
+    badge.className = 'ico';
+    badge.setAttribute('aria-hidden', 'true');
+    badge.textContent = ico;
     const h = document.createElement('h2');
     h.className = 'item';
     h.textContent = it.name;
-    card.append(h);
+    head.append(badge, h);
+    card.append(head);
 
     const wins = document.createElement('div');
     wins.className = 'winners';
