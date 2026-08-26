@@ -22,3 +22,21 @@ __pycache__/
 
 # Node
 node_modules/
+
+# Placeholders left in the working directory by Claude Code's sandbox. It
+# masks these paths by bind-mounting /dev/null over them, which means first
+# creating an empty file to mount onto -- and that file stays behind when the
+# session ends, so every run leaves eleven untracked 0-byte files here. They
+# are never real config; delete them freely. If a genuine .mcp.json or editor
+# directory is ever wanted in the repo, add it with `git add -f`.
+.bash_profile
+.bashrc
+.gitconfig
+.gitmodules
+.idea
+.mcp.json
+.profile
+.ripgreprc
+.vscode
+.zprofile
+.zshrc
