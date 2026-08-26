@@ -37,6 +37,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 SOURCES = ROOT / "sources.csv"
 OUTPUT = ROOT / "food_price_comparison.csv"
+PREVIOUS = ROOT / "food_price_comparison_prev.csv"
 GAPS = ROOT / "gaps.txt"
 
 # Stores worth chasing by hand when trolley has no price. The rest (Aldi,
@@ -325,6 +326,11 @@ def main():
         print("\nNo prices scraped at all -- leaving existing files untouched.",
               file=sys.stderr)
         return 1
+
+    # Last week's figures, kept beside this week's so the dashboard can show
+    # what moved. Taken before the rewrite, and before the routine hand-fills
+    # the gaps, so it is exactly the file that was committed last week.
+    PREVIOUS.write_bytes(OUTPUT.read_bytes())
 
     write_csv(items, data, units)
     gaps = write_gaps(items, data)

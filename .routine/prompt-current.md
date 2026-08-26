@@ -8,6 +8,11 @@ STEP 1 - Run the scraper.
 
 It reads sources.csv, scrapes trolley.co.uk and Ocado product pages, normalises every price to £ per kilogram (or £ per litre for milk and other drinks), rewrites food_price_comparison.csv, and writes gaps.txt. Read its output. It prints one line per source it resolved and lists any source that yielded nothing.
 
+Before rewriting anything it copies last week's food_price_comparison.csv to food_price_comparison_prev.csv. The dashboard reads both files and works out what moved, so that snapshot is what the summary at the top of the page — and every per-price percentage on it — is measured against. Two consequences:
+
+- Run the script once. A second run in the same session would overwrite the snapshot with this week's own figures and flatten every percentage on the page to zero.
+- Never hand-edit food_price_comparison_prev.csv. It is last week's committed file and nothing else.
+
 STEP 2 - Read gaps.txt. It names the exact item/supermarket cells that have no price. That list is your entire remaining workload. Do not look up any cell that is not in it, and do not look up Aldi, Lidl, Iceland or Co-op at all — those are scrape-only by design.
 
 STEP 3 - Fill the gaps with WebSearch and WebFetch.
@@ -41,9 +46,11 @@ The Unit column says what every price in that row is measured in — `kg` for so
 
 Then recalculate the Cheapest column for every row: the supermarket with the lowest non-empty price. If several tie, join them with a forward slash, e.g. Ocado/ASDA. The script already does this for the cells it filled, so redo it after your edits.
 
-STEP 6 - Sanity check before committing. Compare against the previous commit and investigate anything that moved more than about 30% either way — that usually means a product page changed to a different pack size, not a real price change. Report anything you could not resolve.
+STEP 6 - Sanity check before committing. Diff food_price_comparison.csv against food_price_comparison_prev.csv — that pair is exactly what the dashboard compares — and investigate anything that moved more than about 30% either way. That usually means a product page changed to a different pack size, not a real price change, and it would otherwise be published as a headline price crash at the top of the page. Fix the source or empty the cell rather than let a bad figure through.
 
-STEP 7 - Commit all changed files, including sources.csv, with the message:
+Look too at what the summary will lead with: the biggest changes in each item's *cheapest* price, which is what the page ranks its movers by. Anything past about 10% deserves a second look at the product page behind it. Report anything you could not resolve.
+
+STEP 7 - Commit all changed files, including sources.csv and food_price_comparison_prev.csv, with the message:
 
     chore: weekly price update YYYY-MM-DD
 

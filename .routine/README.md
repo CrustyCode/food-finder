@@ -59,6 +59,15 @@ context, writes `gaps.txt`, and the agent only chases what is left.
   were also undeployable: the `github-pages` environment allows the default
   branch only. `deploy.yml` carried a sync-back step to work around that; the
   workaround is gone.
+- **The dashboard's "what moved" summary is computed, not written.** `index.html`
+  fetches `food_price_comparison.csv` and `food_price_comparison_prev.csv` and
+  derives the headline movers and every per-price percentage from the pair, so
+  the routine never writes any prose about prices. `update_prices.py` produces
+  the snapshot itself, copying the outgoing CSV before it rewrites it — which
+  means it must run exactly once per session, and both CSVs must be committed
+  together. `deploy.yml` copies both into `_site`; the page fails to load if
+  either is missing.
+
 - `update_prices.py` fetches from Bash, so it needs the sandbox to allow egress
   to `www.trolley.co.uk` and `www.ocado.com`. That allowlist comes from two
   different places, which is what made the failure confusing:

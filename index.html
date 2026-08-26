@@ -81,6 +81,19 @@
   [data-store="coop"]       { --b: var(--s-coop); }
   [data-store="ms"]         { --b: var(--s-ms); }
 
+  /* Week-on-week movement. Green is a price that fell and red one that rose --
+     the direction the shopper feels, not the sign of the number. */
+  :root {
+    --up-ink: #b02a1f;  --up-bg: #fbeae7;  --up-line: #f0cec8;
+    --down-ink: #1d5a20; --down-bg: #e8f3e5; --down-line: #c2e0bd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --up-ink: #f3a09a;  --up-bg: #33201e;  --up-line: #55302c;
+      --down-ink: #93e097; --down-bg: #1a3220; --down-line: #2c5233;
+    }
+  }
+
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
@@ -243,7 +256,7 @@
 
   .rest {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
     gap: 2px 14px;
     margin: 0;
     padding-top: 8px;
@@ -267,6 +280,71 @@
   }
   .error code { font-size: .82rem; color: var(--ink-dim); word-break: break-word; }
 
+  /* Weekly digest */
+  .digest {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .digest h2 {
+    margin: 0;
+    font-size: 1rem; font-weight: 640; letter-spacing: -0.012em;
+  }
+  .basket {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px;
+    margin: 6px 0 12px;
+    color: var(--ink-dim); font-size: .84rem;
+  }
+  .basket .total { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .basket .tally { margin-left: auto; }
+  .movers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(304px, 1fr));
+    gap: 8px;
+  }
+  .mover {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 11px;
+    border: 1px solid; border-radius: 10px;
+  }
+  .mover.up   { background: var(--up-bg);   border-color: var(--up-line); }
+  .mover.down { background: var(--down-bg); border-color: var(--down-line); }
+  .mover .mv-ico { flex: none; font-size: 1.35rem; line-height: 1; }
+  .mover .mv-text { min-width: 0; flex: 1; }
+  .mover .mv-name {
+    display: block;
+    font-size: .86rem; font-weight: 600; line-height: 1.25;
+  }
+  .mover .mv-sub {
+    display: block;
+    margin-top: 1px;
+    color: var(--ink-dim); font-size: .74rem;
+    font-variant-numeric: tabular-nums;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .mover .mv-pct {
+    flex: none;
+    font-size: .92rem; font-weight: 700; letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .mover.up   .mv-pct { color: var(--up-ink); }
+  .mover.down .mv-pct { color: var(--down-ink); }
+  .quiet { margin: 0; color: var(--ink-dim); font-size: .84rem; }
+  .fresh { margin: 10px 0 0; color: var(--ink-dim); font-size: .78rem; }
+
+  /* The same figure beside every price on the cards below. */
+  .delta {
+    font-size: .72rem; font-weight: 600;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .delta.up   { color: var(--up-ink); }
+  .delta.down { color: var(--down-ink); }
+  .win-fig, .rest-fig { display: flex; align-items: baseline; gap: 7px; }
+  .win .delta { font-size: .76rem; }
+
   @media (hover: hover) {
     .card { transition: border-color .15s ease; }
     .card:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
@@ -285,6 +363,8 @@
     <p class="updated">Prices updated <span id="updated">__UPDATED__</span></p>
   </header>
 
+  <section class="digest" id="digest" hidden></section>
+
   <div class="search">
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
     <input id="q" type="search" placeholder="Search an item…" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
@@ -301,6 +381,7 @@
 const STORES = ["Ocado","Sainsbury's","Tesco","ASDA","Morrisons","Waitrose","Aldi","Lidl","Iceland","Co-op","M&S"];
 
 const grid = document.getElementById('grid');
+const digestEl = document.getElementById('digest');
 const emptyEl = document.getElementById('empty');
 const chipsEl = document.getElementById('chips');
 const q = document.getElementById('q');
@@ -347,6 +428,8 @@ function parseCsv(text) {
       name: f[cols['Item']],
       unit: cols['Unit'] === undefined ? '' : f[cols['Unit']],
       prices,
+      best,
+      byStore: Object.fromEntries(prices.map(p => [p.store, p.price])),
       winners: prices.filter(p => p.price === best),
       others: prices.filter(p => p.price !== best)
     };
@@ -379,6 +462,141 @@ const iconFor = name => {
 const money = n => '£' + n.toFixed(2);
 // Matches the [data-store="..."] brand-colour rules in the stylesheet.
 const slug = s => s.toLowerCase().replace(/[^a-z]/g, '');
+
+const pctOf = (now, was) => (now - was) / was * 100;
+// A true minus sign, not a hyphen -- these sit next to tabular figures.
+const pctText = v => (v > 0 ? '+' : '\u2212') + Math.abs(v).toFixed(1) + '%';
+
+// Last week's price for every cell that had one, plus the movement of the
+// item's cheapest price -- which is the number the digest is built from.
+// Items matched by name, so a renamed row simply starts fresh.
+function attachMovement(current, previous) {
+  const was = new Map(previous.map(it => [it.name, it]));
+  for (const it of current) {
+    const before = was.get(it.name);
+    if (!before) continue;
+    it.isNew = false;
+    for (const p of it.prices) {
+      const then = before.byStore[p.store];
+      if (then) { p.was = then; p.pct = pctOf(p.price, then); }
+    }
+    if (before.best !== null && it.best !== null) {
+      it.wasBest = before.best;
+      it.wasBestStore = before.winners.map(w => w.store).join('/');
+      it.bestPct = pctOf(it.best, before.best);
+    }
+  }
+  for (const it of current) it.isNew = !was.has(it.name);
+}
+
+// The small figure that rides beside a price. Nothing is drawn for a move
+// that rounds to zero -- a column of "0.0%" would bury the ones that matter.
+function deltaEl(p) {
+  if (!Number.isFinite(p.pct) || Math.abs(p.pct) < 0.05) return null;
+  const el = document.createElement('span');
+  el.className = 'delta ' + (p.pct > 0 ? 'up' : 'down');
+  el.textContent = (p.pct > 0 ? '\u25b2' : '\u25bc') + pctText(p.pct).replace(/^[+\u2212]/, '');
+  el.title = 'Was ' + money(p.was) + ' last week';
+  return el;
+}
+
+// Anything smaller than this is shelf noise, not news.
+const NOTABLE = 3;
+const MAX_MOVERS = 8;
+
+function buildDigest() {
+  const tracked = items.filter(it => Number.isFinite(it.bestPct));
+  if (!tracked.length) return;   // nothing to compare against yet
+
+  const movers = tracked
+    .filter(it => Math.abs(it.bestPct) >= NOTABLE)
+    .sort((a, b) => Math.abs(b.bestPct) - Math.abs(a.bestPct))
+    .slice(0, MAX_MOVERS);
+
+  const h = document.createElement('h2');
+  h.textContent = 'What moved this week 📊';
+
+  // The whole list bought at its cheapest, then and now. One number for
+  // whether the shop as a whole got dearer.
+  const now = tracked.reduce((t, it) => t + it.best, 0);
+  const then = tracked.reduce((t, it) => t + it.wasBest, 0);
+  const basketPct = pctOf(now, then);
+
+  const basket = document.createElement('p');
+  basket.className = 'basket';
+  const total = document.createElement('span');
+  total.className = 'total';
+  total.textContent = money(now);
+  basket.append('One of each at its cheapest: ', total, ' ');
+  if (Math.abs(basketPct) >= 0.05) {
+    const d = document.createElement('span');
+    d.className = 'delta ' + (basketPct > 0 ? 'up' : 'down');
+    d.textContent = pctText(basketPct) + ' on last week';
+    basket.append(d);
+  } else {
+    basket.append('— level with last week');
+  }
+
+  const down = tracked.filter(it => it.bestPct <= -NOTABLE).length;
+  const up = tracked.filter(it => it.bestPct >= NOTABLE).length;
+  const tally = document.createElement('span');
+  tally.className = 'tally';
+  tally.textContent = `📉 ${down} cheaper · 📈 ${up} dearer · ${tracked.length - down - up} steady`;
+  basket.append(tally);
+
+  digestEl.replaceChildren(h, basket);
+
+  if (movers.length) {
+    const list = document.createElement('div');
+    list.className = 'movers';
+    for (const it of movers) {
+      const row = document.createElement('div');
+      row.className = 'mover ' + (it.bestPct > 0 ? 'up' : 'down');
+
+      const ico = document.createElement('span');
+      ico.className = 'mv-ico';
+      ico.setAttribute('aria-hidden', 'true');
+      ico.textContent = iconFor(it.name);
+
+      const text = document.createElement('span');
+      text.className = 'mv-text';
+      const name = document.createElement('b');
+      name.className = 'mv-name';
+      name.textContent = it.name;
+      const sub = document.createElement('small');
+      sub.className = 'mv-sub';
+      const store = it.winners.map(w => w.store).join('/');
+      // Where the cheapest moved shop, say so -- that is the actionable half.
+      sub.textContent = store === it.wasBestStore
+        ? `${store} ${money(it.best)} · was ${money(it.wasBest)}`
+        : `now ${store} ${money(it.best)} · was ${it.wasBestStore} ${money(it.wasBest)}`;
+      text.append(name, sub);
+
+      const pct = document.createElement('span');
+      pct.className = 'mv-pct';
+      pct.textContent = (it.bestPct > 0 ? '📈 ' : '📉 ') + pctText(it.bestPct);
+
+      row.append(ico, text, pct);
+      list.append(row);
+    }
+    digestEl.append(list);
+  } else {
+    const calm = document.createElement('p');
+    calm.className = 'quiet';
+    calm.textContent = `😌 Nothing moved more than ${NOTABLE}% — a quiet week.`;
+    digestEl.append(calm);
+  }
+
+  const fresh = items.filter(it => it.isNew);
+  if (fresh.length) {
+    const p = document.createElement('p');
+    p.className = 'fresh';
+    p.textContent = '🆕 Now tracking ' + fresh.map(it => it.name).join(', ') + '.';
+    digestEl.append(p);
+  }
+
+  digestEl.hidden = false;
+}
 
 function render() {
   const term = q.value.trim().toLowerCase();
@@ -426,7 +644,13 @@ function render() {
         u.textContent = '/' + it.unit;
         p.append(' ', u);
       }
-      el.append(s, p);
+      const fig = document.createElement('span');
+      fig.className = 'win-fig';
+      fig.append(p);
+      const d = deltaEl(w);
+      if (d) fig.append(d);
+
+      el.append(s, fig);
       wins.append(el);
     }
     card.append(wins);
@@ -443,7 +667,13 @@ function render() {
         const p = document.createElement('span');
         p.className = 'price';
         p.textContent = money(o.price);
-        row.append(s, p);
+        const fig = document.createElement('span');
+        fig.className = 'rest-fig';
+        fig.append(p);
+        const d = deltaEl(o);
+        if (d) fig.append(d);
+
+        row.append(s, fig);
         rest.append(row);
       }
       card.append(rest);
@@ -498,13 +728,18 @@ function buildChips() {
 q.addEventListener('input', render);
 clearBtn.addEventListener('click', () => { q.value = ''; q.focus(); render(); });
 
-fetch('food_price_comparison.csv', { cache: 'no-cache' })
-  .then(r => {
-    if (!r.ok) throw new Error('HTTP ' + r.status + ' fetching food_price_comparison.csv');
-    return r.text();
-  })
-  .then(text => {
+const load = name => fetch(name, { cache: 'no-cache' }).then(r => {
+  if (!r.ok) throw new Error('HTTP ' + r.status + ' fetching ' + name);
+  return r.text();
+});
+
+// The previous week's file is written by update_prices.py before it rewrites
+// this week's, so the two are always a week apart.
+Promise.all([load('food_price_comparison.csv'), load('food_price_comparison_prev.csv')])
+  .then(([text, prevText]) => {
     items = parseCsv(text);
+    attachMovement(items, parseCsv(prevText));
+    buildDigest();
     buildChips();
     render();
   })

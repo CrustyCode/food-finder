@@ -36,7 +36,7 @@ jobs:
       - name: Assemble site
         run: |
           mkdir _site
-          cp index.html food_price_comparison.csv _site/
+          cp index.html food_price_comparison.csv food_price_comparison_prev.csv _site/
           stamp=$(git log -1 --format=%cd --date=format:'%-d %B %Y' -- food_price_comparison.csv)
           sed -i "s/__UPDATED__/$stamp/" _site/index.html
 
