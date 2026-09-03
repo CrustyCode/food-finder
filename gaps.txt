@@ -3,13 +3,13 @@ write them into food_price_comparison.csv normalised per kg (or per
 litre for drinks), and append any product page you used to
 sources.csv so it is free next week.
 
-Organic Apples ~6-pack: M&S, Morrisons, Waitrose
+Organic Apples ~6-pack: M&S, Waitrose
 Organic Whole Milk 4pt: M&S
-Organic Carrots ~500g: M&S, Morrisons
+Organic Carrots ~500g: M&S
 Organic Green Lentils ~500g: ASDA, M&S, Morrisons, Tesco
 Organic White Potatoes ~1.5kg: M&S, Morrisons
 Organic Mature Cheddar ~270g: ASDA, M&S, Morrisons
-Organic Houmous ~200g: ASDA, M&S, Morrisons, Ocado
+Organic Houmous ~200g: ASDA, M&S, Morrisons
 Organic Black Beans ~400g: ASDA, M&S, Morrisons
 Organic Frozen Chopped Spinach: ASDA, M&S, Morrisons, Tesco
 Organic Frozen Blueberries: ASDA, M&S, Morrisons, Waitrose
