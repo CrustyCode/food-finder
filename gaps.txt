@@ -4,15 +4,15 @@ litre for drinks), and append any product page you used to
 sources.csv so it is free next week.
 
 Organic Apples ~6-pack: M&S, Waitrose
-Organic Whole Milk 4pt: M&S, Morrisons
-Organic Carrots ~500g: M&S, Tesco
-Organic Green Lentils ~500g: ASDA, M&S, Morrisons, Tesco
-Organic White Potatoes ~1.5kg: M&S, Morrisons
-Organic Mature Cheddar ~270g: ASDA, M&S, Morrisons
-Organic Houmous ~200g: ASDA, M&S, Morrisons, Ocado
-Organic Black Beans ~400g: ASDA, M&S, Morrisons, Ocado
-Organic Frozen Chopped Spinach: ASDA, M&S, Morrisons, Ocado, Tesco
+Organic Whole Milk 4pt: M&S, Morrisons, Waitrose
+Organic Carrots ~500g: M&S, Waitrose
+Organic Green Lentils ~500g: ASDA, M&S, Morrisons, Tesco, Waitrose
+Organic White Potatoes ~1.5kg: M&S, Morrisons, Waitrose
+Organic Mature Cheddar ~270g: ASDA, M&S, Morrisons, Waitrose
+Organic Houmous ~200g: ASDA, M&S, Morrisons, Ocado, Waitrose
+Organic Black Beans ~400g: ASDA, M&S, Morrisons, Ocado, Waitrose
+Organic Frozen Chopped Spinach: ASDA, M&S, Morrisons, Ocado, Tesco, Waitrose
 Organic Frozen Blueberries: ASDA, M&S, Morrisons, Ocado, Waitrose
 Organic Crunchy Peanut Butter ~340g: M&S, Ocado, Tesco
-Greek Yoghurt ~500g: M&S, Morrisons, Ocado
-Skyr ~450g: M&S, Ocado
+Greek Yoghurt ~500g: M&S, Morrisons, Ocado, Waitrose
+Skyr ~450g: ASDA, M&S, Ocado
