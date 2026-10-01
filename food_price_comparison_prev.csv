@@ -1,14 +1,14 @@
 #,Item,Unit,Ocado,Sainsbury's,Tesco,ASDA,Morrisons,Waitrose,Aldi,Lidl,Iceland,Co-op,M&S,Cheapest
 1,Organic Apples ~6-pack,kg,3.13,3.13,3.73,3.12,3.13,,,,,,,ASDA
-2,Organic Whole Milk 4pt,l,1.17,1.17,1.08,1.06,,1.17,,,,,,ASDA
-3,Organic Carrots ~500g,kg,1.53,1.93,,1.81,1.83,1.60,,,,2.80,,Ocado
-4,Organic Green Lentils ~500g,kg,4.60,5.00,,,,4.40,,,,,,Waitrose
-5,Organic White Potatoes ~1.5kg,kg,1.43,1.23,1.23,1.21,,1.13,,,,,,Waitrose
-6,Organic Mature Cheddar ~270g,kg,13.00,12.96,13.25,,,10.86,,,,,,Waitrose
-7,Organic Houmous ~200g,kg,,8.50,8.50,,,8.00,,,,,,Waitrose
-8,Organic Black Beans ~400g,kg,,3.42,4.38,,,2.37,,,,,,Waitrose
-9,Organic Frozen Chopped Spinach,kg,,6.33,,,,3.30,,,,,,Waitrose
-10,Organic Frozen Blueberries,kg,,16.00,16.00,,,,,,,,,Sainsbury's/Tesco
-11,Organic Crunchy Peanut Butter ~340g,kg,,13.24,,10.24,10.59,8.09,,,,,,Waitrose
-12,Greek Yoghurt ~500g,kg,,2.30,1.90,2.30,,2.30,,,,1.90,,Tesco/Co-op
-13,Skyr ~450g,kg,,5.56,5.56,5.00,2.78,5.89,,,,,,Morrisons
+2,Organic Whole Milk 4pt,l,1.17,1.17,1.08,1.06,1.06,1.17,,,,,,ASDA/Morrisons
+3,Organic Carrots ~500g,kg,1.53,1.93,1.93,1.81,1.83,1.60,,,,2.80,,Ocado
+4,Organic Green Lentils ~500g,kg,4.60,5.00,,,,4.40,,,,,4.50,Waitrose
+5,Organic White Potatoes ~1.5kg,kg,1.43,1.23,1.23,1.21,0.99,,,,,,,Morrisons
+6,Organic Mature Cheddar ~270g,kg,13.00,12.96,13.25,,,10.86,,,,,14.29,Waitrose
+7,Organic Houmous ~200g,kg,10.29,8.50,8.50,,,9.45,,,,,7.06,M&S
+8,Organic Black Beans ~400g,kg,4.00,3.42,4.38,,,3.13,,,,,,Waitrose
+9,Organic Frozen Chopped Spinach,kg,6.33,6.33,,,,4.00,,,,,2.67,M&S
+10,Organic Frozen Blueberries,kg,16.00,16.00,16.00,,,,,,,,,Ocado/Sainsbury's/Tesco
+11,Organic Crunchy Peanut Butter ~340g,kg,13.24,13.24,,10.24,10.59,,,,,,,ASDA
+12,Greek Yoghurt ~500g,kg,2.30,2.30,1.90,2.30,2.30,2.40,,,,1.90,2.40,Tesco/Co-op
+13,Skyr ~450g,kg,2.78,5.56,5.56,2.78,2.78,5.89,,,,,4.44,Ocado/ASDA/Morrisons
